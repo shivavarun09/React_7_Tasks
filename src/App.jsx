@@ -6,7 +6,7 @@ import {Button, ButtonGroup} from '@mui/material'
 const App = () => {
   return (
     <div>
-      <ButtonGroup sx={{ gap: 2 }}>
+      <ButtonGroup sx={{ gap: 2,m:3 }}>
         <Button component={Link} to="/Day1" variant="contained">
           Day1
         </Button>
