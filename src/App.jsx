@@ -1,26 +1,44 @@
-import React from 'react'
-import { Route,Routes,Link } from 'react-router-dom'
-import Day1 from './Day1/Parent'
-import Day2 from './Day2/FormParent'
-import {Button, ButtonGroup} from '@mui/material'
+import React from 'react';
+import { Route, Routes, Link } from 'react-router-dom';
+import Day1 from './Day1/Parent';
+import Day2 from './Day2/FormParent';
+import Day3 from './Day3/MainApp';
+
+import { Button, ButtonGroup } from '@mui/material';
+
 const App = () => {
+
+  const pages = {
+    Day1: <Day1 />,
+    Day2: <Day2 />,
+    Day3: <Day3 />
+  };
+
   return (
     <div>
-      <ButtonGroup sx={{ gap: 2,m:3 }}>
-        <Button component={Link} to="/Day1" variant="contained">
-          Day1
-        </Button>
-        <Button component={Link} to="Day2" variant="contained">
-          Day 2
-        </Button>
+      
+      {/* Dynamic Buttons */}
+      <ButtonGroup sx={{ gap: 2, m: 3 }}>
+        {Object.keys(pages).map((day) => (
+          <Button 
+            key={day}
+            component={Link}
+            to={`/${day}`}
+            variant="contained"
+          >
+            {day}
+          </Button>
+        ))}
       </ButtonGroup>
 
+      {/* Dynamic Routes */}
       <Routes>
-        <Route path="/Day1" element={<Day1 />} />
-        <Route path="Day2" element={<Day2 />} />
+        {Object.entries(pages).map(([day, component]) => (
+          <Route key={day} path={`/${day}`} element={component} />
+        ))}
       </Routes>
     </div>
   );
-}
+};
 
-export default App
+export default App;
