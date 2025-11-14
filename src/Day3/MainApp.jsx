@@ -25,7 +25,7 @@ setTimeout(()=>{setModal(false)},5000)
 
       <ButtonGroup sx={{display:"flex",gap:3}}>
       <Button variant="contained" onClick={() => setOpen(true)}>
-        Notification ReactDOM.createPortal
+        Notification using Portal
       </Button>
       <Button variant="contained"  onClick={()=>setModal(true)}>
         {modal?"hide modal":"show modal"}
