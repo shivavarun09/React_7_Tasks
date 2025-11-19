@@ -1,12 +1,14 @@
-import { Box, Button, Card, CardActions, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import axios, { all } from 'axios';
+import { Box, Button, ButtonGroup, Card, CardActions, MenuItem, Select, Typography } from '@mui/material';
+import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
 import TodoUpdatePortamModal from './TodoUpdatePortamModal';
 
 const DisplayAllGrid = ({ refresh, setRefresh }) => {
   const [allTodos, setAllTodos] = useState([]);
   const [modal, setModal] = useState(false);
   const [editTodoId, setEditTodoId] = useState(null);
+  const [filter, setFilter] = useState("all");
+
   const API = import.meta.env.VITE_BASEAPI;
 
   // Fetch all todos
@@ -37,12 +39,10 @@ const DisplayAllGrid = ({ refresh, setRefresh }) => {
 
   // Toggle Todo Status
   const handleStatus = async (id, currentStatus) => {
-    console.log(id,currentStatus)
     try {
-      await axios.put(`${import.meta.env.VITE_BASEAPI}/user/updateTodostatus/${id}`, {
-        toStatus: !currentStatus,
+      await axios.put(`${API}/user/updateTodostatus/${id}`, {
+        todoStatus: !currentStatus,
       });
-
       fetchTodos();
     } catch (error) {
       alert(error.message);
@@ -55,50 +55,55 @@ const DisplayAllGrid = ({ refresh, setRefresh }) => {
     setModal(true);
   };
 
+  // FILTERED TODOS
+  const filteredTodos = useMemo(() => {
+    if (filter === "all") return allTodos;
+    if (filter === "completed") return allTodos.filter(todo => todo.todoStatus === true);
+    if (filter === "not-completed") return allTodos.filter(todo => todo.todoStatus === false);
+  }, [filter, allTodos]);
+
   return (
     <Box>
-      <Typography variant="h5" sx={{ mb: 2 }}>
-        All Todos
-      </Typography>
+      {/* FILTER SECTION */}
+      <Box sx={{ display: "flex", gap: 2, m: 2, alignItems: "center" }}>
+        <Typography variant="h5">All Todos</Typography>
 
-      {allTodos.length === 0 ? (
-        <Typography>No todos found</Typography>
+        <Select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          size="small"
+        >
+          <MenuItem value="all">All</MenuItem>
+          <MenuItem value="completed">Completed</MenuItem>
+          <MenuItem value="not-completed">Not Completed</MenuItem>
+        </Select>
+        <Typography variant="h5">Total Todos:{filteredTodos.length}</Typography>
+      </Box>
+
+      {/* DISPLAY FILTERED TODOS */}
+      {filteredTodos.length === 0 ? (
+        <Typography variant='h4' sx={{textAlign:"center",mt:3}}>No todos found</Typography>
       ) : (
-        allTodos.map((todo) => (
+        filteredTodos.map((todo) => (
           <Card 
             key={todo._id} 
-            sx={{ m: 1, p: 2, borderLeft: todo.toStatus ? "5px solid green" : "5px solid orange" }}
+            sx={{ m: 1, p: 2, borderLeft: todo.todoStatus ? "5px solid green" : "5px solid orange" }}
           >
-            {/* Todo Name */}
             <Typography sx={{ fontSize: "18px", mb: 1, fontWeight: 600 }}>
               {todo.todoName}
             </Typography>
 
-            {/* Status Text */}
             <Typography sx={{ mb: 1 }}>
               Status:{" "}
-              <strong style={{ color: todo.toStatus ? "green" : "orange" }}>
-                {todo.toStatus ? "Completed" : "Not Completed"}
+              <strong style={{ color: todo.todoStatus ? "green" : "orange" }}>
+                {todo.todoStatus ? "Completed" : "Not Completed"}
               </strong>
             </Typography>
 
-        
-            {/* Actions */}
-            <CardActions sx={{ display: "flex", justifyContent: "space-between",alignItems:"center",alignContent:"center" }}>
+            <CardActions sx={{ display: "flex" }}>
               <Button variant="outlined" onClick={() => handleEdit(todo._id)}>
                 Edit
               </Button>
-
-    {/* Toggle Status Button */}
-            <Button
-              variant="contained"
-              fullWidth
-              color={todo.toStatus ? "success" : "warning"}
-              sx={{ mb: 2 }}
-              onClick={() => handleStatus(todo._id, todo.todoStatus)}
-            >
-              {todo.toStatus ? "Mark as Incomplete" : "Mark as Completed"}
-            </Button>
 
               <Button
                 variant="contained"
@@ -107,11 +112,20 @@ const DisplayAllGrid = ({ refresh, setRefresh }) => {
               >
                 Delete
               </Button>
+              
+              <Button
+                variant="contained"
+                color={todo.todoStatus ? "success" : "warning"}
+                onClick={() => handleStatus(todo._id, todo.todoStatus)}
+              >
+                {todo.todoStatus ? "Mark as Incomplete" : "Mark as Completed"}
+              </Button>
             </CardActions>
           </Card>
         ))
       )}
 
+      {/* MODAL */}
       <TodoUpdatePortamModal
         modal={modal}
         setModal={setModal}
