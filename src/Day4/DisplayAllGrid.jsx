@@ -71,8 +71,14 @@ const DisplayAllGrid = ({ refresh, setRefresh }) => {
             sx={{ display: "flex", flexDirection: "column", m: 1, p: 2 }}
           >
             <Typography sx={{ mb: 1 }}>{todo.todoName}</Typography>
+            <Typography sx={{ mb: 1 }}>  {todo.toStatus ? "Completed" : "Not Completed"}</Typography>
 
-            {/* Status Button */}
+          
+
+            <CardActions>
+              <Button onClick={() => handleEdit(todo._id)}>Edit</Button>
+              <Button color="error" onClick={() => handleDelete(todo._id)}>Delete</Button>
+                {/* Status Button */}
             <Button 
               variant="contained" 
               onClick={() => handleStatus(todo._id, todo.toStatus)}
@@ -80,10 +86,6 @@ const DisplayAllGrid = ({ refresh, setRefresh }) => {
             >
               {todo.toStatus ? "Completed" : "Not Completed"}
             </Button>
-
-            <CardActions>
-              <Button onClick={() => handleEdit(todo._id)}>Edit</Button>
-              <Button color="error" onClick={() => handleDelete(todo._id)}>Delete</Button>
             </CardActions>
           </Card>
         ))
