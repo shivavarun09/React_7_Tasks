@@ -1,13 +1,12 @@
 import { Box, Button, Card, CardActions, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { all } from 'axios';
 import TodoUpdatePortamModal from './TodoUpdatePortamModal';
 
 const DisplayAllGrid = ({ refresh, setRefresh }) => {
   const [allTodos, setAllTodos] = useState([]);
   const [modal, setModal] = useState(false);
   const [editTodoId, setEditTodoId] = useState(null);
-
   const API = import.meta.env.VITE_BASEAPI;
 
   // Fetch all todos
@@ -26,31 +25,31 @@ const DisplayAllGrid = ({ refresh, setRefresh }) => {
 
   // Delete Todo
   const handleDelete = async (id) => {
-    const userConfirmed = confirm("Do you want to delete this todo?");
-    if (!userConfirmed) return;
+    if (!confirm("Do you want to delete this todo?")) return;
 
     try {
       await axios.delete(`${API}/user/delete/${id}`);
-      fetchTodos();        // refresh UI
+      fetchTodos();
     } catch (error) {
       alert(error.message);
     }
   };
 
-  // Update Todo Status
+  // Toggle Todo Status
   const handleStatus = async (id, currentStatus) => {
+    console.log(id,currentStatus)
     try {
-      await axios.put(`${API}/user/updateTodo/${id}`, {
-        toStatus: !currentStatus
+      await axios.put(`${import.meta.env.VITE_BASEAPI}/user/updateTodostatus/${id}`, {
+        toStatus: !currentStatus,
       });
 
-      fetchTodos();        // update UI
+      fetchTodos();
     } catch (error) {
       alert(error.message);
     }
   };
 
-  // Open edit modal
+  // Open Edit Modal
   const handleEdit = (id) => {
     setEditTodoId(id);
     setModal(true);
@@ -68,34 +67,56 @@ const DisplayAllGrid = ({ refresh, setRefresh }) => {
         allTodos.map((todo) => (
           <Card 
             key={todo._id} 
-            sx={{ display: "flex", flexDirection: "column", m: 1, p: 2 }}
+            sx={{ m: 1, p: 2, borderLeft: todo.toStatus ? "5px solid green" : "5px solid orange" }}
           >
-            <Typography sx={{ mb: 1 }}>{todo.todoName}</Typography>
-            <Typography sx={{ mb: 1 }}>  {todo.toStatus ? "Completed" : "Not Completed"}</Typography>
+            {/* Todo Name */}
+            <Typography sx={{ fontSize: "18px", mb: 1, fontWeight: 600 }}>
+              {todo.todoName}
+            </Typography>
 
-          
+            {/* Status Text */}
+            <Typography sx={{ mb: 1 }}>
+              Status:{" "}
+              <strong style={{ color: todo.toStatus ? "green" : "orange" }}>
+                {todo.toStatus ? "Completed" : "Not Completed"}
+              </strong>
+            </Typography>
 
-            <CardActions>
-              <Button onClick={() => handleEdit(todo._id)}>Edit</Button>
-              <Button color="error" onClick={() => handleDelete(todo._id)}>Delete</Button>
-                {/* Status Button */}
-            <Button 
-              variant="contained" 
-              onClick={() => handleStatus(todo._id, todo.toStatus)}
-              sx={{ mb: 1 }}
+        
+            {/* Actions */}
+            <CardActions sx={{ display: "flex", justifyContent: "space-between",alignItems:"center",alignContent:"center" }}>
+              <Button variant="outlined" onClick={() => handleEdit(todo._id)}>
+                Edit
+              </Button>
+
+    {/* Toggle Status Button */}
+            <Button
+              variant="contained"
+              fullWidth
+              color={todo.toStatus ? "success" : "warning"}
+              sx={{ mb: 2 }}
+              onClick={() => handleStatus(todo._id, todo.todoStatus)}
             >
-              {todo.toStatus ? "Completed" : "Not Completed"}
+              {todo.toStatus ? "Mark as Incomplete" : "Mark as Completed"}
             </Button>
+
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => handleDelete(todo._id)}
+              >
+                Delete
+              </Button>
             </CardActions>
           </Card>
         ))
       )}
 
-      <TodoUpdatePortamModal 
-        modal={modal} 
-        setModal={setModal} 
-        editTodoId={editTodoId} 
-        setRefresh={setRefresh} 
+      <TodoUpdatePortamModal
+        modal={modal}
+        setModal={setModal}
+        editTodoId={editTodoId}
+        setRefresh={setRefresh}
       />
     </Box>
   );
