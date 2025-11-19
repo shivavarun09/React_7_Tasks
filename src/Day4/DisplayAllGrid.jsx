@@ -7,10 +7,11 @@ const DisplayAllGrid = ({refresh,setRefresh}) => {
   const [allTodos, setAllTodos] = useState([]);
   const [modal,setModal] = useState(false);
   const [editTodoId,setEditTodoId] =useState()
-
+const API = import.meta.env.VITE_BASEAPI;
+console.log(API)
   const fetchTodos = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/user/getall");
+      const res = await axios.get(`${import.meta.env.VITE_BASEAPI}/user/getall`);
       setAllTodos(res.data.data);
     } catch (e) {
       alert(e.message);

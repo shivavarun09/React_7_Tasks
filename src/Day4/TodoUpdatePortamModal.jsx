@@ -6,11 +6,11 @@ import axios from 'axios';
 export default function TodoUpdatePortalModal({ modal, setModal, editTodoId ,setRefresh}) {
   const [updateTodo, setUpdateTodo] = useState({});
 
-  const handleTodoUpdate = (e) => {
+  const handleTodoUpdate = async(e) => {
     e.preventDefault();
     console.log("Updated Todo ID:", editTodoId);
     console.log("Updated Fields:", updateTodo);
-    axios.put(`${import.meta.env.VITE_BASEAPI}/user/updateTodo/${editTodoId}`,updateTodo)
+  await  axios.put(`${import.meta.env.VITE_BASEAPI}/user/updateTodo/${editTodoId}`,updateTodo)
   
 setRefresh(prev=>!prev)
     setModal(false);

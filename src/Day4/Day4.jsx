@@ -8,10 +8,7 @@ const Day4 = () => {
   const [refresh,setRefresh] = useState(false)
   const handleTodo=async()=>{
   try{
-  // console.log(todo)
-    // alert(JSON.stringify(todo))
-    const baseUrl = process.env.BASEURl;
-    console.log(baseUrl)
+
     await axios.post(`${import.meta.env.VITE_BASEAPI}/user/addtodo`,todo)
     alert("todo posted successfully")
     setRefresh(prev=>!prev)
