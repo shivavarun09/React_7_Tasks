@@ -3,6 +3,7 @@ import { Route, Routes, Link } from 'react-router-dom';
 import Day1 from './Day1/Parent';
 import Day2 from './Day2/FormParent';
 import Day3 from './Day3/MainApp';
+import Day4 from './Day4/Day4';
 
 import { Button, ButtonGroup } from '@mui/material';
 
@@ -11,7 +12,8 @@ const App = () => {
   const pages = {
     Day1: <Day1 />,
     Day2: <Day2 />,
-    Day3: <Day3 />
+    Day3: <Day3 />,
+    Day4: <Day4 />
   };
 
   return (

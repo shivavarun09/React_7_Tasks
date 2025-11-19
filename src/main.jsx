@@ -8,12 +8,14 @@ import {ErrorBoundary} from 'react-error-boundary'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-  <ErrorBoundary FallbackComponent={ErrorFallback}>
 
   
   <StrictMode>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+
     <App />
+      </ErrorBoundary>
+
   </StrictMode>
-  </ErrorBoundary>
     </BrowserRouter>,
 )
