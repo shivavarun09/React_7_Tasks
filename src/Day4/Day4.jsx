@@ -5,7 +5,8 @@ import axios from 'axios'
 import DisplayAllGrid from './DisplayAllGrid'
 const Day4 = () => {
   const [todo,setTodo]= useState({todoStatus:false,todoName:""});
-  const [refresh,setRefresh] = useState(false)
+  const [refresh,setRefresh] = useState(false);
+  const [loading,setLoadin] = useState(false)
   const handleTodo=async(e)=>{
   try{
 e.preventDefault();

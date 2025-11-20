@@ -66,8 +66,6 @@ const DisplayAllGrid = ({ refresh, setRefresh }) => {
     <Box>
       {/* FILTER SECTION */}
       <Box sx={{ display: "flex", gap: 2, m: 2, alignItems: "center" }}>
-        <Typography variant="h5">All Todos</Typography>
-
         <Select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
@@ -77,7 +75,11 @@ const DisplayAllGrid = ({ refresh, setRefresh }) => {
           <MenuItem value="completed">Completed</MenuItem>
           <MenuItem value="not-completed">Not Completed</MenuItem>
         </Select>
-        <Typography variant="h5">Total Todos:{filteredTodos.length}</Typography>
+        <Typography variant="h6">{filter==="all"?"All todos":filter==="completed"?"Completed Todos":"Not completed"}</Typography>
+
+        
+        <Typography variant="h6">Total:
+          <strong>{filteredTodos.length}</strong></Typography>
       </Box>
 
       {/* DISPLAY FILTERED TODOS */}
